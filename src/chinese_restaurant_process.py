@@ -109,7 +109,7 @@ Number of customers at each table:
         """
         return {k: len(v) for k, v in self.tables.items()}
 
-    def get_wts(self):
+    def __get_wts(self):
         """
         Returns
         -------
@@ -145,7 +145,7 @@ Number of customers at each table:
             Execute a single step in the Process
             """
             # Get probability of new table and normalized weights of existing tables
-            new, probs = self.get_wts()
+            new, probs = self.__get_wts()
             if np.random.random() <= new:
                 # Add a new table to `self.tables`
                 self.tables[len(self.tables)] = np.array([self.n])
@@ -229,5 +229,5 @@ if __name__ == "__main__":
     # plt.show()
 
     # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
-    # nim = crt.animate()
+    # anim = crt.animate()
     # plt.show()
