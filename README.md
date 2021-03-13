@@ -1,1 +1,1 @@
-# hgen-48600-final-project
+# Chinese Restaurant Process
