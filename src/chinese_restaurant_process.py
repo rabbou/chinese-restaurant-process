@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 
 class ChineseRestaurantProcess:
@@ -31,9 +32,27 @@ class ChineseRestaurantProcess:
         self.n = 1
 
     def __repr__(self):
-        df = self.to_pandas()
-        ntables = len(df)
-        return """Chinese Restaurant Process
+        """
+        Set the output of calling `print()` on a `ChineseRestaurantProcess` object
+
+        Returns
+        -------
+        string
+            Information about parameter choice, simulation outcomes
+        """
+        if self.n == 1:
+            return """Chinese Restaurant Process
+
+Parameters
+----------
+alpha = {}
+n     = {}""".format(
+                self.alpha, 0
+            )
+        else:
+            df = self.to_pandas()
+            ntables = len(df)
+            return """Chinese Restaurant Process
 
 Parameters
 ----------
@@ -46,10 +65,13 @@ Number of tables = {}
 Number of customers at each table:
 {}
 """.format(
-            self.alpha, self.n - 1, ntables, df
-        )
+                self.alpha, self.n - 1, ntables, df
+            )
 
     def to_pandas(self):
+        """
+        Produce a `pd.DataFrame` object summarizing results of simulation
+        """
         return pd.DataFrame.from_dict(
             self.get_table_dict(), orient="index", columns=["Number of Customers"]
         )
@@ -142,15 +164,70 @@ Number of customers at each table:
         return self
 
     def visualize(self):
+        """
+        Visualize the final state of the Process as a bar plot
+
+        Returns
+        -------
+        plt.figure
+            Bar plot as described
+        """
         names, sizes = self.get_table_names(), self.get_table_sizes()
-        print(names)
-        fig = plt.figure(figsize = (8, 5))
-        plt.bar(x = names, height = sizes)
-        plt.show()
+
+        fig = plt.figure(figsize=(8, 5))
+        plt.bar(x=names, height=sizes)
+        plt.xlabel("Table name")
+        plt.ylabel("Number of customers")
+        plt.title(
+            r"Chinese Restaurant Process with $\alpha = {}, n = {}$".format(
+                self.alpha, self.n - 1
+            )
+        )
+        return fig
+
+    def animate(self):
+        """
+        Animate the progress of the CRT by looping through `self.history` and
+        producing a bar plot at each interval
+        """
+        names = self.get_table_names()
+        ntables = len(names)
+
+        fig = plt.figure(figsize=(8, 5))
+        plt.xlabel("Table name")
+        plt.ylabel("Number of customers")
+
+        def anim_history(idx):
+            state = self.history[idx]
+            bar_heights = np.array(
+                [state[name] if name in state.keys() else 0 for name in names]
+            )
+
+            plt.title(
+                r"Chinese Restaurant Process with $\alpha = {}, n = {}$".format(
+                    self.alpha, idx + 1
+                )
+            )
+
+            return plt.bar(x=names, height=bar_heights, color="maroon")
+
+        anim = FuncAnimation(
+            fig, anim_history, repeat=False, blit=False, frames=self.n, interval=100
+        )
+        return anim
 
 
 if __name__ == "__main__":
+    # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
     crt = ChineseRestaurantProcess(alpha=2.5).iter(100)
+
+    # Example of `ChineseRestaurantProcess.__repr__()` method
     print(crt)
 
-    crt.visualize()
+    # Example of `ChineseRestaurantProcess.visualize()` method (uncomment to run)
+    # fig = crt.visualize()
+    # plt.show()
+
+    # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
+    # nim = crt.animate()
+    # plt.show()
