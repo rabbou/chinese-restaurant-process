@@ -221,8 +221,8 @@ if __name__ == "__main__":
     # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
     crt = ChineseRestaurantProcess(alpha=2.5).iter(100)
 
-    # Example of `ChineseRestaurantProcess.__repr__()` method
-    print(crt)
+    # Example of `ChineseRestaurantProcess.__repr__()` method (uncomment to run)
+    # print(crt)
 
     # Example of `ChineseRestaurantProcess.visualize()` method (uncomment to run)
     # fig = crt.visualize()
