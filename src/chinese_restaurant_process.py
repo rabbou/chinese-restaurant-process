@@ -68,14 +68,6 @@ Number of customers at each table:
                 self.alpha, self.n - 1, ntables, df
             )
 
-    def to_pandas(self):
-        """
-        Produce a `pd.DataFrame` object summarizing results of simulation
-        """
-        return pd.DataFrame.from_dict(
-            self.get_table_dict(), orient="index", columns=["Number of Customers"]
-        )
-
     def get_table_names(self):
         """
         Get an array of the names of each table
@@ -109,6 +101,14 @@ Number of customers at each table:
         """
         return {k: len(v) for k, v in self.tables.items()}
 
+    def to_pandas(self):
+        """
+        Produce a `pd.DataFrame` object summarizing results of simulation
+        """
+        return pd.DataFrame.from_dict(
+            self.get_table_dict(), orient="index", columns=["Number of Customers"]
+        )
+
     def __get_wts(self):
         """
         Private method to get the sampling weights for the current iteration
@@ -138,7 +138,7 @@ Number of customers at each table:
         ChineseRestaurantProcess:
             Returns `self`, so you can call it inline with assignment, i.e.
         ```python
-        crt = ChineseRestaurantProcess(alpha=1).iter(100)
+        crp = ChineseRestaurantProcess(alpha=1).iter(100)
         ```
         """
 
@@ -223,15 +223,15 @@ Number of customers at each table:
 
 if __name__ == "__main__":
     # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
-    crt = ChineseRestaurantProcess(alpha=2.5).iter(100)
+    crp = ChineseRestaurantProcess(alpha=2.5).iter(100)
 
     # Example of `ChineseRestaurantProcess.__repr__()` method (uncomment to run)
-    # print(crt)
+    # print(crp)
 
     # Example of `ChineseRestaurantProcess.visualize()` method (uncomment to run)
-    # fig = crt.visualize()
+    # fig = crp.visualize()
     # plt.show()
 
     # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
-    anim = crt.animate()
+    anim = crp.animate()
     plt.show()
