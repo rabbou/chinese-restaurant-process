@@ -51,12 +51,34 @@ Number of customers at each table:
 
     def to_pandas(self):
         return pd.DataFrame.from_dict(
-            self.get_table_sizes(), orient="index", columns=["Number of Customers"]
+            self.get_table_dict(), orient="index", columns=["Number of Customers"]
         )
+
+    def get_table_names(self):
+        """
+        Get an array of the names of each table
+
+        Returns
+        -------
+        np.array
+            array of the table names
+        """
+        return np.array(list(self.tables.keys()))
 
     def get_table_sizes(self):
         """
-        Find out how many people are sitting at each table
+        Get an array of the number of people at each table
+
+        Returns
+        -------
+        np.array
+            array of number of people at each table
+        """
+        return np.array([len(v) for v in self.tables.values()])
+
+    def get_table_dict(self):
+        """
+        Get a dictionary of pairs from `get_table_names()` and `get_table_sizes()`
 
         Returns
         -------
@@ -75,7 +97,7 @@ Number of customers at each table:
             probabilities of sitting at each of the existing tables, conditional on
             _not_ sitting at a new table
         """
-        table_sizes = np.array([len(v) for v in self.tables.values()])
+        table_sizes = self.get_table_sizes()
         return self.alpha / (self.n - 1 + self.alpha), table_sizes / np.sum(table_sizes)
 
     def iter(self, niter):
@@ -114,15 +136,21 @@ Number of customers at each table:
 
         for ii in np.arange(niter):
             # Preserve previous states of the Process in `self.history`
-            self.history.append(self.get_table_sizes())
+            self.history.append(self.get_table_dict())
             step(self)
 
         return self
 
     def visualize(self):
-        fig = plt.figure((8, 5))
+        names, sizes = self.get_table_names(), self.get_table_sizes()
+        print(names)
+        fig = plt.figure(figsize = (8, 5))
+        plt.bar(x = names, height = sizes)
+        plt.show()
 
 
 if __name__ == "__main__":
     crt = ChineseRestaurantProcess(alpha=2.5).iter(100)
     print(crt)
+
+    crt.visualize()
