@@ -111,6 +111,8 @@ Number of customers at each table:
 
     def __get_wts(self):
         """
+        Private method to get the sampling weights for the current iteration
+
         Returns
         -------
         float:
@@ -153,12 +155,14 @@ Number of customers at each table:
                 # Append `self.n` to an existing table
                 sel = np.random.choice(np.arange(len(self.tables)), size=1, p=probs)[0]
                 self.tables[sel] = np.append(self.tables[sel], self.n)
+
+            # Preserve previous states of the Process in `self.history`
+            self.history.append(self.get_table_dict())
+
             # Increment `n` before exiting
             self.n += 1
 
         for ii in np.arange(niter):
-            # Preserve previous states of the Process in `self.history`
-            self.history.append(self.get_table_dict())
             step(self)
 
         return self
@@ -229,5 +233,5 @@ if __name__ == "__main__":
     # plt.show()
 
     # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
-    # anim = crt.animate()
-    # plt.show()
+    anim = crt.animate()
+    plt.show()
