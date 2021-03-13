@@ -126,7 +126,7 @@ Number of customers at each table:
 
     def iter(self, niter):
         """
-        Iterate the process `niter` times.
+        Advance the process `niter` times.
 
         Parameters
         ----------
