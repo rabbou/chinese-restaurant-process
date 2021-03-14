@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -222,19 +223,24 @@ Number of customers at each table:
 
 
 if __name__ == "__main__":
-    # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
-    crp = ChineseRestaurantProcess(alpha=3.5).iter(100)
+    # Produce visualizations and animations for several `alpha` values
+    for alpha in np.array([1.0, 5.0, 20.0, 50.0]):
+        # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
+        crp = ChineseRestaurantProcess(alpha=alpha).iter(200)
 
-    # Example of `ChineseRestaurantProcess.__repr__()` method
-    print(crp)
+        # Example of `ChineseRestaurantProcess.__repr__()` method
+        print(crp)
 
-    # Example of `ChineseRestaurantProcess.visualize()` method
-    fig = crp.visualize()
-    plt.show()
+        # Example of `ChineseRestaurantProcess.visualize()` method
+        fig = crp.visualize()
+        plt.savefig(os.path.join("..", "assets", "tables_a{}.png".format(alpha)))
 
-    # Example of `ChineseRestaurantProcess.animate()` method
-    anim = crp.animate()
-    plt.show()
+        # Example of `ChineseRestaurantProcess.animate()` method
+        anim = crp.animate()
 
-    # Uncomment to save `anim` to a GIF file
-    # anim.save("../tables.gif", writer="imagemagick", fps=20)
+        # Uncomment to save `anim` to a GIF file
+        anim.save(
+            os.path.join("..", "assets", "tables_a{}.gif".format(alpha)),
+            writer="imagemagick",
+            fps=30,
+        )

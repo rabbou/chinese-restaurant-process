@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.neighbors import KernelDensity
@@ -11,7 +12,7 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
     simply being a wrapper around the Process.
     """
 
-    def __init__(self, alpha, param_generator, sampler):
+    def __init__(self, alpha, param_prior, sampler):
         """
         Initialize a ChineseRestaurantMixture class with concentration parameter `alpha`
         Higher choice of `alpha` leads to more tables for fixed number of customers
@@ -27,17 +28,18 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
             list of all previous states of the Process
         n: int
             number of states simulated, plus 1
-        param_generator: int -> (int or float)
+        param_prior: int -> (int or float)
             since the number of tables is theoretically infinite, this is a function which maps
-            table # (int) to a int or float (parameter value)
+            table # (int) to a int or float (parameter value). That is, `param_prior(k)` should
+            yield a draw from the prior distribution of theta_k
         sampler: (int or float) -> (int or float)
-            function which takes a parameter value from `param_generator` and samples from a certain
+            function which takes a parameter value from `param_prior` and samples from a certain
             distribution with given parameter value
         datapoints: np.ndarray (int or float)
             array of the sampled values from the mixture
         """
         super().__init__(alpha)
-        self.param_generator = param_generator
+        self.param_prior = param_prior
         self.sampler = sampler
         self.datapoints = None
 
@@ -63,7 +65,7 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
         self.iter(sample_size)
 
         ntables = len(self.tables)
-        params = np.array([self.param_generator(idx) for idx in np.arange(ntables)])
+        params = np.array([self.param_prior(idx) for idx in np.arange(ntables)])
 
         datapoints = np.zeros(self.n)
         offset = 0
@@ -91,8 +93,9 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
             Kernel density estimate of datapoints
         """
 
-        # Fix x-axis and plot lims before plotting
+        # Fix x-axis and plot xlims before plotting
         x_axis = np.linspace(self.datapoints.min(), self.datapoints.max())
+        plt.xlim(self.datapoints.min(), self.datapoints.max())
 
         # Limit dataset to just the `first_n` points
         first_n = (len(self.datapoints) - 1) if first_n is None else first_n
@@ -100,11 +103,12 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
         kde = KernelDensity(bandwidth=1.0, kernel="gaussian").fit(data.reshape(-1, 1))
         logprob = kde.score_samples(x_axis.reshape(-1, 1))
 
+        # Set y lims
+        plt.ylim(0, np.exp(logprob).max() + 0.1)
+
         if clear:
             plt.clf()
             plt.plot(x_axis, np.exp(logprob))
-        plt.xlim(self.datapoints.min(), self.datapoints.max())
-        plt.ylim(0, 0.5)
         plt.title(
             r"Density estimate after $n = {}$ samples, $\alpha = {}$".format(
                 first_n, self.alpha
@@ -129,28 +133,32 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
 
 
 if __name__ == "__main__":
-    # Parameter generator for N(theta, theta^2) family.
-    # Theta = table number trivially in this example, but any mapping from the natural
-    # numbers to the desired parameter space can work
-    param_gen = lambda idx: ((idx + 3), (idx + 3))
+    # Parameter prior: in this case, we draw a normal prior for each theta_idx with
+    # mean `10 + idx` and standard devation 2.5
+    param_gen = lambda idx: np.random.normal(loc=10 + idx, scale=2.5, size=1)[0]
     # Sampler for N(theta, theta^2) family
-    sampler = lambda param: np.random.normal(loc=param[0], scale=param[1], size=1)[0]
+    sampler = lambda param: np.random.normal(loc=param, scale=param, size=1)[0]
 
-    # Initialize the `ChineseRestaurantMixture` class
-    crm = ChineseRestaurantMixture(
-        alpha=3.5, param_generator=param_gen, sampler=sampler
-    )
-    # Sample 400 points from the mixture distribution specified
-    crm.sample(400)
-    print(crm)
+    # Produce visualizations and animations for several `alpha` values
+    for alpha in np.array([1.0, 5.0, 20.0, 50.0]):
+        # Initialize the `ChineseRestaurantMixture` class
+        crm = ChineseRestaurantMixture(
+            alpha=alpha, param_prior=param_gen, sampler=sampler
+        )
+        # Sample 400 points from the mixture distribution specified
+        crm.sample(400)
+        print(crm)
 
-    # Example of `ChineseRestaurantProcess.visualize()` method
-    fig = crm.visualize(clear=True)
-    plt.show()
+        # Example of `ChineseRestaurantProcess.visualize()` method
+        fig = crm.visualize(clear=True)
+        plt.savefig(os.path.join("..", "assets", "mixture_a{}.png".format(alpha)))
 
-    # Example of `ChineseRestaurantProcess.animate()` method
-    anim = crm.animate(clear=True)
-    plt.show()
+        # Example of `ChineseRestaurantProcess.animate()` method
+        anim = crm.animate(clear=True)
 
-    # Uncomment to save `anim` to a GIF file
-    # anim.save("../assets/mixture.gif", writer="imagemagick", fps=60)
+        # Uncomment to save `anim` to a GIF file
+        anim.save(
+            os.path.join("..", "assets", "mixture_a{}.gif".format(alpha)),
+            writer="imagemagick",
+            fps=30,
+        )
