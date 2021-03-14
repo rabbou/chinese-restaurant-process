@@ -5,11 +5,6 @@ date: Winter 2021
 output: html_document
 bibliography: bib.bib
 ---
-<!-- # Chinese Restaurant Process Simulation
-###### Jack Potrykus & Ruben Abbou
-###### STAT 35450 - Computational Biology
-###### Winter 2021 -->
-
 
 ## Motivation
 
