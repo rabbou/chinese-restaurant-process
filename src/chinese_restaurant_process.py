@@ -179,7 +179,7 @@ Number of customers at each table:
         names, sizes = self.get_table_names(), self.get_table_sizes()
 
         fig = plt.figure(figsize=(8, 5))
-        plt.bar(x=names, height=sizes)
+        plt.bar(x=names, height=sizes, color="maroon")
         plt.xlabel("Table name")
         plt.ylabel("Number of customers")
         plt.title(
@@ -216,22 +216,25 @@ Number of customers at each table:
             return plt.bar(x=names, height=bar_heights, color="maroon")
 
         anim = FuncAnimation(
-            fig, anim_history, repeat=False, blit=False, frames=self.n, interval=100
+            fig, anim_history, repeat=False, blit=False, frames=self.n - 1, interval=100
         )
         return anim
 
 
 if __name__ == "__main__":
     # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
-    crp = ChineseRestaurantProcess(alpha=2.5).iter(400)
+    crp = ChineseRestaurantProcess(alpha=3.5).iter(100)
 
-    # Example of `ChineseRestaurantProcess.__repr__()` method (uncomment to run)
+    # Example of `ChineseRestaurantProcess.__repr__()` method
     print(crp)
 
-    # Example of `ChineseRestaurantProcess.visualize()` method (uncomment to run)
+    # Example of `ChineseRestaurantProcess.visualize()` method
     fig = crp.visualize()
     plt.show()
 
-    # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
+    # Example of `ChineseRestaurantProcess.animate()` method
     anim = crp.animate()
     plt.show()
+
+    # Uncomment to save `anim` to a GIF file
+    # anim.save("../tables.gif", writer="imagemagick", fps=20)

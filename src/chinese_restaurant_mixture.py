@@ -6,9 +6,14 @@ from chinese_restaurant_process import ChineseRestaurantProcess
 
 
 class ChineseRestaurantMixture(ChineseRestaurantProcess):
+    """
+    Inherits from `ChineseRestaurantProcess` class, with the extra utility provided
+    simply being a wrapper around the Process.
+    """
+
     def __init__(self, alpha, param_generator, sampler):
         """
-        Initialize a ChineseRestaurantProcess class with concentration parameter `alpha`
+        Initialize a ChineseRestaurantMixture class with concentration parameter `alpha`
         Higher choice of `alpha` leads to more tables for fixed number of customers
 
         Attributes
@@ -135,14 +140,17 @@ if __name__ == "__main__":
     crm = ChineseRestaurantMixture(
         alpha=3.5, param_generator=param_gen, sampler=sampler
     )
-    # Sample 250 points from the mixture distribution specified
+    # Sample 400 points from the mixture distribution specified
     crm.sample(400)
     print(crm)
 
-    # Example of `ChineseRestaurantProcess.visualize()` method (uncomment to run)
+    # Example of `ChineseRestaurantProcess.visualize()` method
     fig = crm.visualize(clear=True)
     plt.show()
 
-    # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
+    # Example of `ChineseRestaurantProcess.animate()` method
     anim = crm.animate(clear=True)
     plt.show()
+
+    # Uncomment to save `anim` to a GIF file
+    # anim.save("../assets/mixture.gif", writer="imagemagick", fps=60)
