@@ -12,15 +12,15 @@ class ChineseRestaurantProcess:
 
     def __init__(self, alpha):
         """
-        Initialize a ChineseRestaurantProcess class with concentration parameter `alpha`
-        Higher choice of `alpha` leads to more tables for fixed number of customers
+        Initialize a ChineseRestaurantProcess class with concentration parameter alpha
+        Higher choice of alpha leads to more tables for fixed number of customers
 
         Attributes
         ----------
         alpha: float
             concentration parameter
         tables: dict
-            keys are table #s (ints), values are arrays, indicating which `n` resulted
+            keys are table #s (ints), values are arrays, indicating which n resulted
             in a customere sitting at that table
         history: list
             list of all previous states of the Process
@@ -34,7 +34,7 @@ class ChineseRestaurantProcess:
 
     def __repr__(self):
         """
-        Set the output of calling `print()` on a `ChineseRestaurantProcess` object
+        Set the output of calling print() on a ChineseRestaurantProcess object
 
         Returns
         -------
@@ -93,7 +93,7 @@ Number of customers at each table:
 
     def get_table_dict(self):
         """
-        Get a dictionary of pairs from `get_table_names()` and `get_table_sizes()`
+        Get a dictionary of pairs from get_table_names() and get_table_sizes()
 
         Returns
         -------
@@ -104,7 +104,7 @@ Number of customers at each table:
 
     def to_pandas(self):
         """
-        Produce a `pd.DataFrame` object summarizing results of simulation
+        Produce a pd.DataFrame object summarizing results of simulation
         """
         return pd.DataFrame.from_dict(
             self.get_table_dict(), orient="index", columns=["Number of Customers"]
@@ -127,7 +127,7 @@ Number of customers at each table:
 
     def iter(self, niter):
         """
-        Advance the process `niter` times.
+        Advance the process niter times.
 
         Parameters
         ----------
@@ -137,10 +137,8 @@ Number of customers at each table:
         Returns
         -------
         ChineseRestaurantProcess:
-            Returns `self`, so you can call it inline with assignment, i.e.
-        ```python
-        crp = ChineseRestaurantProcess(alpha=1).iter(100)
-        ```
+            Returns self, so you can call it inline with assignment, i.e.
+            crp = ChineseRestaurantProcess(alpha=1).iter(100)
         """
 
         def step(self):
@@ -150,17 +148,17 @@ Number of customers at each table:
             # Get probability of new table and normalized weights of existing tables
             new, probs = self.__get_wts()
             if np.random.random() <= new:
-                # Add a new table to `self.tables`
+                # Add a new table to self.tables
                 self.tables[len(self.tables)] = np.array([self.n])
             else:
-                # Append `self.n` to an existing table
+                # Append self.n to an existing table
                 sel = np.random.choice(np.arange(len(self.tables)), size=1, p=probs)[0]
                 self.tables[sel] = np.append(self.tables[sel], self.n)
 
-            # Preserve previous states of the Process in `self.history`
+            # Preserve previous states of the Process in self.history
             self.history.append(self.get_table_dict())
 
-            # Increment `n` before exiting
+            # Increment n before exiting
             self.n += 1
 
         for ii in np.arange(niter):
@@ -192,7 +190,7 @@ Number of customers at each table:
 
     def animate(self):
         """
-        Animate the progress of the CRT by looping through `self.history` and
+        Animate the progress of the CRT by looping through self.history and
         producing a bar plot at each interval
         """
         names = self.get_table_names()
@@ -223,22 +221,22 @@ Number of customers at each table:
 
 
 if __name__ == "__main__":
-    # Produce visualizations and animations for several `alpha` values
+    # Produce visualizations and animations for several alpha values
     for alpha in np.array([1.0, 5.0, 20.0, 50.0]):
-        # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
+        # Example intialization of ChineseRestaurantProcess with inline .iter() method
         crp = ChineseRestaurantProcess(alpha=alpha).iter(200)
 
-        # Example of `ChineseRestaurantProcess.__repr__()` method
+        # Example of ChineseRestaurantProcess.__repr__() method
         print(crp)
 
-        # Example of `ChineseRestaurantProcess.visualize()` method
+        # Example of ChineseRestaurantProcess.visualize() method
         fig = crp.visualize()
         plt.savefig(os.path.join("..", "assets", "tables_a{}.png".format(alpha)))
 
-        # Example of `ChineseRestaurantProcess.animate()` method
+        # Example of ChineseRestaurantProcess.animate() method
         anim = crp.animate()
 
-        # Uncomment to save `anim` to a GIF file
+        # Uncomment to save anim to a GIF file
         anim.save(
             os.path.join("..", "assets", "tables_a{}.gif".format(alpha)),
             writer="imagemagick",
