@@ -218,15 +218,16 @@ pre code {
 </div>
 <div id="formulation" class="section level3">
 <h3>Formulation</h3>
-<p>Let <span class="math inline">\(\mathbf{c}_{n}\)</span> be the table assigned to the <span class="math inline">\(n\)</span>th customer, and <span class="math inline">\(m_k\)</span> is the number of customers sitting at table <span class="math inline">\(k\)</span>.</p>
+<p>Let <span class="math inline">\(\mathbf{c}_{n}\)</span> be the table assigned to the <span class="math inline">\(n\)</span>th customer, <span class="math inline">\(m_k\)</span> the number of customers sitting at table <span class="math inline">\(k\)</span> and <span class="math inline">\(K_+\)</span> the number of occupied tables.</p>
 <p><span class="math display">\[P\left(c_{n}=k \mid \mathbf{c}_{1: n-1}\right) \propto\left\{\begin{array}{ll}
-\frac{m_{k}}{n-1+\alpha} &amp; \text { if } k \text { is a previously occupied table} \\
+\frac{m_{k}}{n-1+\alpha} &amp; \text { if } k \le K_+ \\
 \frac{\alpha}{n-1+\alpha} &amp; \text { if } k \text { is the next unoccupied table}
 \end{array}\right.\]</span></p>
 <p>The CRP is an exchangeable process, as <span class="math inline">\(p(c)\)</span> does not depend on the order in which customers arrive. The proof can be found in <span class="citation">Gershman and Blei (2011)</span>.</p>
 </div>
 <div id="mixture-models" class="section level3">
 <h3>Mixture Models</h3>
+<p>We can use the CRP to cluster data into an infinite number of dimensions.</p>
 </div>
 </div>
 <div id="examples" class="section level2">
@@ -235,6 +236,10 @@ pre code {
 </div>
 <div id="exercises" class="section level2">
 <h2>Exercises</h2>
+<ol style="list-style-type: decimal">
+<li>Show that the expected number of tables is <span class="math inline">\(\mathbb{E}\left[K_{+}\right]=\alpha \log N\)</span>, for <span class="math inline">\(\alpha &lt; \frac{N}{\log N}\)</span>.</li>
+<li>Prove the exchangeability property of the Chinese Random Process.</li>
+</ol>
 <div id="sources" class="section level4 unnumbered">
 <h4 class="unnumbered">Sources</h4>
 <div id="refs" class="references csl-bib-body hanging-indent">

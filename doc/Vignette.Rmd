@@ -29,15 +29,15 @@ $\alpha$ is called the concentration parameter. As $\alpha$ increases, the CRP w
 
 <center>
 
-![CRP_figure](CRP_figure.png)
+![CRP_figure](../assets/CRP_figure.png)
 </center>
 
 ### Formulation
 
-Let $\mathbf{c}_{n}$ be the table assigned to the $n$th customer, and $m_k$ is the number of customers sitting at table $k$.
+Let $\mathbf{c}_{n}$ be the table assigned to the $n$th customer, $m_k$ the number of customers sitting at table $k$ and $K_+$ the number of occupied tables.
 
 $$P\left(c_{n}=k \mid \mathbf{c}_{1: n-1}\right) \propto\left\{\begin{array}{ll}
-\frac{m_{k}}{n-1+\alpha} & \text { if } k \text { is a previously occupied table} \\
+\frac{m_{k}}{n-1+\alpha} & \text { if } k \le K_+ \\
 \frac{\alpha}{n-1+\alpha} & \text { if } k \text { is the next unoccupied table}
 \end{array}\right.$$
 
@@ -45,7 +45,7 @@ The CRP is an exchangeable process, as $p(c)$ does not depend on the order in wh
 
 ### Mixture Models
 
-
+We can use the CRP to cluster data into an infinite number of dimensions.
 
 ## Examples
 
@@ -54,7 +54,7 @@ This @10.1093/bioinformatics/btl284
 
 ## Exercises
 
-1. Show that the expected number of tables is
-2. Prove exchangeability of the Chinese Random Process
+1. Show that the expected number of tables is $\mathbb{E}\left[K_{+}\right]=\alpha \log N$, for $\alpha < \frac{N}{\log N}$.
+2. Prove the exchangeability property of the Chinese Random Process.
 
 #### Sources
