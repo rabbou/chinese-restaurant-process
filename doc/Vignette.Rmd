@@ -1,23 +1,60 @@
-# Chinese Restaurant Process Simulation
+---
+title: The Chinese Restaurant Process
+author: Jack Potrykus & Ruben Abbou
+date: Winter 2021
+output: html_document
+bibliography: bib.bib
+---
+<!-- # Chinese Restaurant Process Simulation
 ###### Jack Potrykus & Ruben Abbou
 ###### STAT 35450 - Computational Biology
-###### Winter 2021
+###### Winter 2021 -->
+
 
 ## Motivation
 
-The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which can be used to cluster microarray gene expression data. Many of the successful techniques which have proven to work for this type of data (such as EXAMPLES) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
+The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which has uses in clustering microarray gene expression data. Many of the successful techniques which have proven to work for this type of data (such as Gibbs sampling, Markov chain Monte Carlo or hidden Markov models) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
 
 ## Method
 
-#### Base Case
+### Overview
 
-A Chinese restaurant is composed of an infinite number of tables. Suppose that customers enter the restaurant
-Imagine a restaurant with an infinite number of tables, and imagine a sequence of customers entering the restaurant and sitting down. The first customer enters and sits at the first table. The second customer enters and sits at the first table with probability $\frac{1}{1+\alpha}$, and the second table with probability $\frac{\alpha}{1+\alpha}$, where $\alpha$ is a positive real. When the $n$th customer enters the restaurant, she sits at each of the occupied tables with probability proportional to the number of previous customers sitting there, and at the next unoccupied table with probability proportional to $\alpha$. At any point in this process, the assignment of customers to tables defines a random partition.
+A Chinese restaurant is composed of an infinite number of tables. Suppose that customers enter the restaurant. Let $\alpha \in \mathbb{R}^+$. The table assignment is done by the CRP using the following algorithm:
+
+- The first customer is assigned to the first table
+- The second customer will choose between the first (occupied) table with probability $\frac{1}{1+\alpha}$ and the second table with probability $\frac{\alpha}{1+\alpha}$.
+- Each following $n$th customer chooses their table assignment with probability proportional to the number of previous customers sitting at each table (for  occupied tables), and with probability $\frac{\alpha}{n-1+\alpha}$ for the next unoccupied table.
+
+$\alpha$ is called the concentration parameter. As $\alpha$ increases, the CRP will produce more occupied tables and fewer customers per table.
+
+<center>
 
 ![CRP_figure](CRP_figure.png)
+</center>
+
+### Formulation
+
+Let $\mathbf{c}_{n}$ be the table assigned to the $n$th customer, and $m_k$ is the number of customers sitting at table $k$.
+
+$$P\left(c_{n}=k \mid \mathbf{c}_{1: n-1}\right) \propto\left\{\begin{array}{ll}
+\frac{m_{k}}{n-1+\alpha} & \text { if } k \text { is a previously occupied table} \\
+\frac{\alpha}{n-1+\alpha} & \text { if } k \text { is the next unoccupied table}
+\end{array}\right.$$
+
+The CRP is an exchangeable process, as $p(c)$ does not depend on the order in which customers arrive. The proof can be found in @gershman2011tutorial.
+
+### Mixture Models
+
+
 
 ## Examples
 
+This @10.1093/bioinformatics/btl284
+
+
 ## Exercises
+
+1. Show that the expected number of tables is
+2. Prove exchangeability of the Chinese Random Process
 
 #### Sources
