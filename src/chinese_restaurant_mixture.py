@@ -127,21 +127,22 @@ if __name__ == "__main__":
     # Parameter generator for N(theta, theta^2) family.
     # Theta = table number trivially in this example, but any mapping from the natural
     # numbers to the desired parameter space can work
-    param_gen = lambda idx: (idx, idx)
+    param_gen = lambda idx: ((idx + 3), (idx + 3))
     # Sampler for N(theta, theta^2) family
     sampler = lambda param: np.random.normal(loc=param[0], scale=param[1], size=1)[0]
 
     # Initialize the `ChineseRestaurantMixture` class
-    crp = ChineseRestaurantMixture(
-        alpha=4.0, param_generator=param_gen, sampler=sampler
+    crm = ChineseRestaurantMixture(
+        alpha=3.5, param_generator=param_gen, sampler=sampler
     )
     # Sample 250 points from the mixture distribution specified
-    crp.sample(250)
+    crm.sample(400)
+    print(crm)
 
     # Example of `ChineseRestaurantProcess.visualize()` method (uncomment to run)
-    # fig = crp.visualize()
-    # plt.show()
+    fig = crm.visualize(clear=True)
+    plt.show()
 
     # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
-    anim = crp.animate(clear=True)
+    anim = crm.animate(clear=True)
     plt.show()

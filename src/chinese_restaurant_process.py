@@ -223,14 +223,14 @@ Number of customers at each table:
 
 if __name__ == "__main__":
     # Example intialization of `ChineseRestaurantProcess` with inline `.iter()` method
-    crp = ChineseRestaurantProcess(alpha=2.5).iter(100)
+    crp = ChineseRestaurantProcess(alpha=2.5).iter(400)
 
     # Example of `ChineseRestaurantProcess.__repr__()` method (uncomment to run)
-    # print(crp)
+    print(crp)
 
     # Example of `ChineseRestaurantProcess.visualize()` method (uncomment to run)
-    # fig = crp.visualize()
-    # plt.show()
+    fig = crp.visualize()
+    plt.show()
 
     # Example of `ChineseRestaurantProcess.animate()` method (uncomment to run)
     anim = crp.animate()
