@@ -10,6 +10,8 @@ The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which ca
 ## Method
 
 #### Base Case
+
+A Chinese restaurant is composed of an infinite number of tables. Suppose that customers enter the restaurant
 Imagine a restaurant with an infinite number of tables, and imagine a sequence of customers entering the restaurant and sitting down. The first customer enters and sits at the first table. The second customer enters and sits at the first table with probability $\frac{1}{1+\alpha}$, and the second table with probability $\frac{\alpha}{1+\alpha}$, where $\alpha$ is a positive real. When the $n$th customer enters the restaurant, she sits at each of the occupied tables with probability proportional to the number of previous customers sitting there, and at the next unoccupied table with probability proportional to $\alpha$. At any point in this process, the assignment of customers to tables defines a random partition.
 
 ![CRP_figure](CRP_figure.png)
