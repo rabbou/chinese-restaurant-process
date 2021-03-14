@@ -6,7 +6,7 @@ from matplotlib.animation import FuncAnimation
 
 class ChineseRestaurantProcess:
     """
-    Initializes and provides utilities to draw from Chinese Restuarant Process
+    Initializes and provides utilities to draw from Chinese Restaurant Process
     """
 
     def __init__(self, alpha):
