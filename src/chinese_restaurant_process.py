@@ -8,24 +8,24 @@ from matplotlib.animation import FuncAnimation
 class ChineseRestaurantProcess:
     """
     Initializes and provides utilities to draw from Chinese Restaurant Process
+
+    Attributes
+    ----------
+    alpha: float
+        concentration parameter
+    tables: dict
+        keys are table #s (ints), values are arrays, indicating which n resulted
+        in a customere sitting at that table
+    history: list
+        list of all previous states of the Process
+    n: int
+        number of states simulated, plus 1
     """
 
     def __init__(self, alpha):
         """
         Initialize a ChineseRestaurantProcess class with concentration parameter alpha
         Higher choice of alpha leads to more tables for fixed number of customers
-
-        Attributes
-        ----------
-        alpha: float
-            concentration parameter
-        tables: dict
-            keys are table #s (ints), values are arrays, indicating which n resulted
-            in a customere sitting at that table
-        history: list
-            list of all previous states of the Process
-        n: int
-            number of states simulated, plus 1
         """
         self.alpha = alpha
         self.tables = {}

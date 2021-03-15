@@ -10,33 +10,33 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
     """
     Inherits from ChineseRestaurantProcess class, with the extra utility provided
     simply being a wrapper around the Process.
+
+    Attributes
+    ----------
+    alpha: float
+        concentration parameter
+    tables: dict
+        keys are table #s (ints), values are arrays, indicating which n resulted
+        in a customere sitting at that table
+    history: list
+        list of all previous states of the Process
+    n: int
+        number of states simulated, plus 1
+    param_prior: int -> (int or float)
+        since the number of tables is theoretically infinite, this is a function which maps
+        table # (int) to a int or float (parameter value). That is, param_prior(k) should
+        yield a draw from the prior distribution of theta_k
+    sampler: (int or float) -> (int or float)
+        function which takes a parameter value from param_prior and samples from a certain
+        distribution with given parameter value
+    datapoints: np.ndarray (int or float)
+        array of the sampled values from the mixture
     """
 
     def __init__(self, alpha, param_prior, sampler):
         """
         Initialize a ChineseRestaurantMixture class with concentration parameter alpha
         Higher choice of alpha leads to more tables for fixed number of customers
-
-        Attributes
-        ----------
-        alpha: float
-            concentration parameter
-        tables: dict
-            keys are table #s (ints), values are arrays, indicating which n resulted
-            in a customere sitting at that table
-        history: list
-            list of all previous states of the Process
-        n: int
-            number of states simulated, plus 1
-        param_prior: int -> (int or float)
-            since the number of tables is theoretically infinite, this is a function which maps
-            table # (int) to a int or float (parameter value). That is, param_prior(k) should
-            yield a draw from the prior distribution of theta_k
-        sampler: (int or float) -> (int or float)
-            function which takes a parameter value from param_prior and samples from a certain
-            distribution with given parameter value
-        datapoints: np.ndarray (int or float)
-            array of the sampled values from the mixture
         """
         super().__init__(alpha)
         self.param_prior = param_prior
