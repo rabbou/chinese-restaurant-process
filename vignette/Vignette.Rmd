@@ -3,12 +3,13 @@ title: The Chinese Restaurant Process
 author: Jack Potrykus & Ruben Abbou
 date: Winter 2021
 output: html_document
-bibliography: bib.bib
+bibliography: bibliography.bib
+csl: bioinformatics.csl
 ---
 
 ## Motivation
 
-The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which has uses in clustering microarray gene expression data. Many of the successful techniques which have proven to work for this type of data (such as Gibbs sampling, Markov chain Monte Carlo or hidden Markov models) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
+The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which has uses in clustering microarray gene expression data [@10.1093/bioinformatics/btl284] and population genetics [@doi:10.4137/EBO.S6761]. Many of the successful techniques which have proven to work for this type of data (such as Gibbs sampling, Markov chain Monte Carlo or hidden Markov models) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
 
 ## Method
 
@@ -36,7 +37,7 @@ $$P\left(c_{n}=k \mid \mathbf{c}_{1: n-1}\right) \propto\left\{\begin{array}{ll}
 \frac{\alpha}{n-1+\alpha} & \text { if } k \text { is the next unoccupied table}
 \end{array}\right.$$
 
-The CRP is an exchangeable process, as $p(c)$ does not depend on the order in which customers arrive. The proof can be found in @gershman2011tutorial.
+The CRP is an exchangeable process, as $p(c)$ does not depend on the order in which customers arrive. The proof can be found in [@gershman2011tutorial].
 
 ### Mixture Models
 
@@ -44,7 +45,7 @@ We can use the CRP to cluster data into an infinite number of dimensions.
 
 ## Examples
 
-In @10.1093/bioinformatics/btl284, the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm consists in a Gibbs sampler initialized with a random number of clusters. They then iterate over each data point (here, genes) and reassign them to the cluster in which they are most likely to belong, or if it is more likely to be in a new cluster alone. The algorithm is run until convergence.
+In [@10.1093/bioinformatics/btl284], the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm consists in a Gibbs sampler initialized with a random number of clusters. They then iterate over each data point (here, genes) and reassign them to the cluster in which they are most likely to belong, or if it is more likely to be in a new cluster alone. The algorithm is run until convergence.
 
 The Chinese restaurant process is not only able to improve the accuracy of the Gibbs sampler, but also facilitates the recognition and clustering of genes that display complex correlation relationships such as time-shifted and/or inverted with others. They obtained rapid convergence of the Gibbs sampler. The following figure displays the cluster assignments for the Yeast galactose dataset.
 
