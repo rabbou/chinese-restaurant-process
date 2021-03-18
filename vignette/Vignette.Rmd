@@ -55,7 +55,7 @@ Let $y_n$ be our observed data, $\theta_k$ be the cluster parameter associated w
 
 $$P\left(y_{n+1} \mid \mathbf{y}_{1: n}\right)=\sum_{\mathbf{c}_{1: n+1}} \int_{\theta} P\left(y_{n+1} \mid c_{n+1}, \theta\right) P\left(c_{n+1} \mid \mathbf{c}_{1: n}\right) P\left(\mathbf{c}_{1: n}, \theta \mid \mathbf{y}_{1: n}\right) d \theta$$
 
-## Examples
+## Research Examples
 
 In [@10.1093/bioinformatics/btl284], the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm used is the Gibbs sampler explained in the Mixture Models section above. The data points here correspond to the genes.
 
@@ -66,7 +66,100 @@ The Chinese restaurant process is not only able to improve the accuracy of the G
 ![yeast_figure](../assets/yeast_clustering.png)
 </center>
 
+## Using the Python Library
 
+To implement the Process, we created a Python library which exports two classes: `ChineseRestaurantProcess` and `ChineseRestaurantMixture`.
+The first class takes the concentration parameter `alpha` as an argument, whereas the second requires `param_prior` and `sampler`, functions which produce the prior distribution for each "table" and draw from the conditional distribution given the table for each "customer", respectively.
+
+Note that the class arguments, attributes, and methods are documented extensively in `package_crp_manualv2.pdf` on the Github.
+
+### Code Examples
+
+The examples below should contextualize the inner workings of the process, as well as the usage of the Python library.
+
+The code block below produces plots and animations of a Chinese Restaurant Process for $\alpha \in \{1, 5, 20, 50\}$.
+```python
+import os
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
+from chinese_restaurant_process import ChineseRestaurantProcess
+
+for alpha in np.array([1.0, 5.0, 20.0, 50.0]):
+    # Example intialization of ChineseRestaurantProcess with inline .iter() method
+    crp = ChineseRestaurantProcess(alpha=alpha).iter(200)
+
+    # Example of ChineseRestaurantProcess.__repr__() method
+    print(crp)
+
+    # Example of ChineseRestaurantProcess.visualize() method
+    fig = crp.visualize()
+    plt.savefig(os.path.join("..", "assets", "tables_a{}.png".format(alpha)))
+
+    # Example of ChineseRestaurantProcess.animate() method
+    anim = crp.animate()
+
+    # Uncomment to save anim to a GIF file
+    anim.save(
+        os.path.join("..", "assets", "tables_a{}.gif".format(alpha)),
+        writer="imagemagick",
+        fps=30,
+    )
+```
+The resulting animations are below. Notice how the number of tables increases with $\alpha$, holding the sample size fixed.
+![Tables01](../assets/tables_a1.0.gif)
+![Tables05](../assets/tables_a5.0.gif)
+![Tables20](../assets/tables_a20.0.gif)
+![Tables50](../assets/tables_a50.0.gif)
+
+The code block below produces plots and animations of a Chinese Resetaurant Mixture for $\alpha \in \{1, 5, 20, 50\}$, with (in this case) a normal prior on each $\theta_{i}$ for each table, for which we have $X | \theta_i \sim N(\theta_i, \theta_i^2)$.
+```
+import os
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
+from chinese_restaurant_process import ChineseRestaurantMixture
+
+# Parameter prior: in this case, we draw a normal prior for each theta_idx with
+# mean 10 + idx and standard devation 2.5
+param_gen = lambda idx: np.random.normal(loc=10 + idx, scale=2.5, size=1)[0]
+# Sampler for N(theta, theta^2) family
+sampler = lambda param: np.random.normal(loc=param, scale=param, size=1)[0]
+
+# Produce visualizations and animations for several alpha values
+for alpha in np.array([1.0, 5.0, 20.0, 50.0]):
+    # Initialize the ChineseRestaurantMixture class
+    crm = ChineseRestaurantMixture(
+        alpha=alpha, param_prior=param_gen, sampler=sampler
+    )
+    # Sample 400 points from the mixture distribution specified
+    crm.sample(400)
+    print(crm)
+
+    # Example of ChineseRestaurantProcess.visualize() method
+    fig = crm.visualize(clear=True)
+    plt.savefig(os.path.join("..", "assets", "mixture_a{}.png".format(alpha)))
+
+    # Example of ChineseRestaurantProcess.animate() method
+    anim = crm.animate(clear=True)
+
+    # Uncomment to save anim to a GIF file
+    anim.save(
+        os.path.join("..", "assets", "mixture_a{}.gif".format(alpha)),
+        writer="imagemagick",
+        fps=30,
+    )
+```
+
+The animations produced by the above code snippet are displayed below, to provide intuition to the effect of $\alpha$ on the resulting mixture-density estimate.
+![Mixture01](../assets/mixture_a1.0.gif}
+![Mixture05](../assets/mixture_a5.0.gif)
+![Mixture20](../assets/mixture_a20.0.gif)
+![Mixture50](../assets/mixture_a50.0.gif)
+
+This mixture of normals is meant to be a familiar example, but the class is very flexible. Indeed, `param_prior` can be any function which maps any natural number $n$ to a draw from the prior distribution for $\theta_n$, and `sampler` can be any function which returns a draw from the conditional distribution given the parameter.
+
+As an example of a more "advanced" usage, one could write a prior which returns a $k$-vector/tuple of parameters, pass this vector of parameters as the lone argument to the `sampler` function, and then unpack this vector of parameters in the body of the `sampler` function; this is all to say that the `ChineseRestaurantMixture` class is highly flexible and supports an arbitrary number of parameters $k$.
 
 ## Exercises
 
