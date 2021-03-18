@@ -9,7 +9,11 @@ csl: bioinformatics.csl
 
 ## Motivation
 
-The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which has uses in clustering microarray gene expression data [@10.1093/bioinformatics/btl284] and population genetics [@doi:10.4137/EBO.S6761]. Many of the successful techniques which have proven to work for this type of data (such as Gibbs sampling, Markov chain Monte Carlo or hidden Markov models) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
+The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which has uses in clustering microarray gene expression data [@10.1093/bioinformatics/btl284], in population genetics [@doi:10.4137/EBO.S6761] and in modelling response time in cognitive processes [@gershman2011tutorial]. Many of the successful techniques which have proven to work for this type of data (such as Gibbs sampling, Markov chain Monte Carlo or hidden Markov models) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
+
+#### Source Code
+
+The source code which includes a python utility to simulate Chinese Restaurant Processes can be found on [github](https://github.com/jackpotrykus/chinese-restaurant-process).
 
 ## Method
 
@@ -41,11 +45,15 @@ The CRP is an exchangeable process, as $p(c)$ does not depend on the order in wh
 
 ### Mixture Models
 
-We can use the CRP to cluster data into an infinite number of dimensions.
+The CRP is used as an infinite mixture model, as it allows grouping of data into an infinite number of clusters. A common algorithm consists in a Gibbs sampler initialized which can be initialized with a random number of clusters [@10.1093/bioinformatics/btl284], or given a prior [@gershman2011tutorial]. We then iterate over each data point and reassign them to the cluster in which they are most likely to belong, or if it is more likely to be in a new cluster alone. The algorithm is run until convergence.
+
+The prior expected number of clusters $K^+$ grows logarithmically with the number of customers $N$ and is controlled by the concentration parameter $\alpha$, with the condition that $\alpha < \frac{N}{\log N}$:
+
+$$\mathbb{E}\left[K_{+}\right]=\alpha \log N$$
 
 ## Examples
 
-In [@10.1093/bioinformatics/btl284], the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm consists in a Gibbs sampler initialized with a random number of clusters. They then iterate over each data point (here, genes) and reassign them to the cluster in which they are most likely to belong, or if it is more likely to be in a new cluster alone. The algorithm is run until convergence.
+In [@10.1093/bioinformatics/btl284], the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm used is the Gibbs sampler explained in the Mixture Models section above. The data points here correspond to the genes.
 
 The Chinese restaurant process is not only able to improve the accuracy of the Gibbs sampler, but also facilitates the recognition and clustering of genes that display complex correlation relationships such as time-shifted and/or inverted with others. They obtained rapid convergence of the Gibbs sampler. The following figure displays the cluster assignments for the Yeast galactose dataset.
 

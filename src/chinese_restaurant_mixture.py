@@ -60,6 +60,7 @@ class ChineseRestaurantMixture(ChineseRestaurantProcess):
         reset: bool
             whether or not to reset self.datapoints before proceeding
         """
+        assert alpha < sample_size / np.log(sample_size), "growth condition not met"
         if reset and self.datapoints is not None:
             self.reset()
         self.iter(sample_size)
