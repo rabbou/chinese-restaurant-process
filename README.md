@@ -4,7 +4,7 @@
 
 # Overview
 
-In this repository, we provide a python package complete with utilities to simulate draws from a Chinese Restaurant Process, as well as a vignette covering motivation _for_, algorithm picture and example use-cases _of_, and simulations _from_ the Chinese Restaurant Process.
+In this repository, we provide a python package complete with utilities to simulate draws from a Chinese Restaurant Process, as well as a vignette covering motivation _for_, algorithm overview and example use-cases _of_, and simulations _from_ the Chinese Restaurant Process.
 
 # Directory Structure
 

@@ -9,7 +9,7 @@ csl: bioinformatics.csl
 
 ## Motivation
 
-The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which has uses in clustering microarray gene expression data [@10.1093/bioinformatics/btl284], in population genetics [@doi:10.4137/EBO.S6761] and in modelling response time in cognitive processes [@gershman2011tutorial]. Many of the successful techniques which have proven to work for this type of data (such as Gibbs sampling, Markov chain Monte Carlo or hidden Markov models) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
+The Chinese Restaurant Process (CRP) is a Bayesian nonparametric method which has uses in clustering microarray gene expression data [@10.1093/bioinformatics/btl284], in population genetics [@doi:10.4137/EBO.S6761] and in modelling response time in cognitive processes [@gershman2011tutorial]. Many of the successful techniques which have proven to work for this type of data (such as Gibbs sampling using finite mixtures, Markov chain Monte Carlo or hidden Markov models) rely on previous knowledge about the data such as the number of clusters. This can be problematic as microarray data may contain important fluctuation and we may not always know the number of clusters we aim to separate. The CRP provides an alternative method which does not require prior knowledge on the data, and assumes an infinite number of latent clusters.
 
 #### Source Code
 
@@ -27,6 +27,8 @@ A Chinese restaurant is composed of an infinite number of tables. Suppose that c
 
 $\alpha$ is called the concentration parameter. As $\alpha$ increases, the CRP will produce more occupied tables and fewer customers per table.
 
+The following is an illustration from @gershman2011tutorial.
+
 <center>
 
 ![CRP_figure](../assets/CRP_figure.png)
@@ -34,14 +36,14 @@ $\alpha$ is called the concentration parameter. As $\alpha$ increases, the CRP w
 
 ### Formulation
 
-Let $\mathbf{c}_{n}$ be the table assigned to the $n$th customer, $m_k$ the number of customers sitting at table $k$ and $K_+$ the number of occupied tables.
+Let $\mathbf{c}_{n}$ be the table assigned to the $n$th customer, $m_k$ the number of customers sitting at table $k$ and $K_+$ the number of occupied tables. The cluster assignment of the CRP can be simulated using the following conditional probability:
 
 $$P\left(c_{n}=k \mid \mathbf{c}_{1: n-1}\right) \propto\left\{\begin{array}{ll}
 \frac{m_{k}}{n-1+\alpha} & \text { if } k \le K_+ \\
 \frac{\alpha}{n-1+\alpha} & \text { if } k \text { is the next unoccupied table}
 \end{array}\right.$$
 
-The CRP is an exchangeable process, as $p(c)$ does not depend on the order in which customers arrive. The proof can be found in [@gershman2011tutorial].
+The CRP is an exchangeable process, as $p(c)$ does not depend on the order in which customers arrive. The proof can be found in @gershman2011tutorial.
 
 ### Mixture Models
 
@@ -57,7 +59,7 @@ $$P\left(y_{n+1} \mid \mathbf{y}_{1: n}\right)=\sum_{\mathbf{c}_{1: n+1}} \int_{
 
 ## Research Examples
 
-In [@10.1093/bioinformatics/btl284], the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm used is the Gibbs sampler explained in the Mixture Models section above. The data points here correspond to the genes.
+@10.1093/bioinformatics/btl284 proposes a method based on the CRP to cluster microarray gene expression data. The algorithm used is the Gibbs sampler with random initialization explained in the Mixture Models section above. The data points here correspond to the genes.
 
 The Chinese restaurant process is not only able to improve the accuracy of the Gibbs sampler, but also facilitates the recognition and clustering of genes that display complex correlation relationships such as time-shifted and/or inverted with others. They obtained rapid convergence of the Gibbs sampler. The following figure displays the cluster assignments for the Yeast galactose dataset.
 
@@ -107,13 +109,15 @@ for alpha in np.array([1.0, 5.0, 20.0, 50.0]):
     )
 ```
 The resulting animations are below. Notice how the number of tables increases with $\alpha$, holding the sample size fixed.
+
 ![Tables01](../assets/tables_a1.0.gif)
 ![Tables05](../assets/tables_a5.0.gif)
 ![Tables20](../assets/tables_a20.0.gif)
 ![Tables50](../assets/tables_a50.0.gif)
 
 The code block below produces plots and animations of a Chinese Resetaurant Mixture for $\alpha \in \{1, 5, 20, 50\}$, with (in this case) a normal prior on each $\theta_{i}$ for each table, for which we have $X | \theta_i \sim N(\theta_i, \theta_i^2)$.
-```
+
+```python
 import os
 import numpy as np
 from matplotlib import pyplot as plt
@@ -152,7 +156,8 @@ for alpha in np.array([1.0, 5.0, 20.0, 50.0]):
 ```
 
 The animations produced by the above code snippet are displayed below, to provide intuition to the effect of $\alpha$ on the resulting mixture-density estimate.
-![Mixture01](../assets/mixture_a1.0.gif}
+
+![Mixture01](../assets/mixture_a1.0.gif)
 ![Mixture05](../assets/mixture_a5.0.gif)
 ![Mixture20](../assets/mixture_a20.0.gif)
 ![Mixture50](../assets/mixture_a50.0.gif)
@@ -166,4 +171,4 @@ As an example of a more "advanced" usage, one could write a prior which returns 
 1. Show that the expected number of tables is $\mathbb{E}\left[K_{+}\right]=\alpha \log N$, for $\alpha < \frac{N}{\log N}$.
 2. Prove the exchangeability property of the Chinese Random Process.
 
-#### Sources
+## References
