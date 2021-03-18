@@ -1,5 +1,6 @@
 # The Chinese Restaurant Process
-Ruben Abbou & Jack Potrykus
+###### Computational Biology
+###### Ruben Abbou & Jack Potrykus
 
 # Overview
 
