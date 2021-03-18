@@ -44,7 +44,15 @@ We can use the CRP to cluster data into an infinite number of dimensions.
 
 ## Examples
 
-This @10.1093/bioinformatics/btl284
+In @10.1093/bioinformatics/btl284, the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm consists in a Gibbs sampler initialized with a random number of clusters. They then iterate over each data point (here, genes) and reassign them to the cluster in which they are most likely to belong, or if it is more likely to be in a new cluster alone. The algorithm is run until convergence.
+
+The Chinese restaurant process is not only able to improve the accuracy of the Gibbs sampler, but also facilitates the recognition and clustering of genes that display complex correlation relationships such as time-shifted and/or inverted with others. They obtained rapid convergence of the Gibbs sampler. The following figure displays the cluster assignments for the Yeast galactose dataset.
+
+<center>
+
+![yeast_figure](../assets/yeast_clustering.png)
+</center>
+
 
 
 ## Exercises
