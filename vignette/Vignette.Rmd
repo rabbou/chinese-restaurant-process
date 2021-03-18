@@ -51,6 +51,10 @@ The prior expected number of clusters $K^+$ grows logarithmically with the numbe
 
 $$\mathbb{E}\left[K_{+}\right]=\alpha \log N$$
 
+Let $y_n$ be our observed data, $\theta_k$ be the cluster parameter associated with table $k$, $c_n$ be each cluster created by the algorithm. We choose $P\left(c_{n+1} \mid \mathbf{c}_{1: n}\right)$ to be our prior for the process. We are able to study the likely partitioning of the data and evaluate the posterior predictive distribution to produce the clusters:
+
+$$P\left(y_{n+1} \mid \mathbf{y}_{1: n}\right)=\sum_{\mathbf{c}_{1: n+1}} \int_{\theta} P\left(y_{n+1} \mid c_{n+1}, \theta\right) P\left(c_{n+1} \mid \mathbf{c}_{1: n}\right) P\left(\mathbf{c}_{1: n}, \theta \mid \mathbf{y}_{1: n}\right) d \theta$$
+
 ## Examples
 
 In [@10.1093/bioinformatics/btl284], the authors propose a method based on the CRP to cluster microarray gene expression data. The algorithm used is the Gibbs sampler explained in the Mixture Models section above. The data points here correspond to the genes.
